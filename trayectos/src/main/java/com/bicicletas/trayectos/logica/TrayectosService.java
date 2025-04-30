@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -198,6 +199,35 @@ public class TrayectosService {
         return trayecto;
 
     }
+
+    // CU005- Consultar resumen de todos los trayectos
+    // 1. Ingresa la fecha de inicio y la fecha fin de los trayectos a consultar 
+    @Transactional(value = TxType.SUPPORTS)
+    public List<Trayecto> consultarTrayectosPorFecha(
+            LocalDateTime fechaInicio, 
+            LocalDateTime fechaFinal)
+        throws Exception {
+
+        // 2. Verifica que la fecha de inicio sea menor que la fecha final
+
+        if (fechaInicio.isAfter(fechaFinal)) {
+            throw new Exception("La fecha de inicio es mayor que la fecha final");
+        }
+
+        // 3. Obtiene todos los trayectos en ese rango de fechas
+        List<Trayecto> listaTrayectos = trayectos.findEnRangoFechas(fechaInicio, fechaFinal);
+
+        // 4. Muestra la información todos los trayectos encontrados: la hora de inicio, 
+        //    la longitud y latitud de la ubicación inicial, la longitud y latitud de 
+        //    todas las ubicaciones de ese trayecto, la distancia recorrida, la hora final 
+        //    y la longitud y latitud de la última ubicación |
+        return listaTrayectos;
+    } 
+
+
+
+
+
 
 }    
 
